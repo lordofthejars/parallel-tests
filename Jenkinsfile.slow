@@ -1,0 +1,15 @@
+stage 'Compile'
+
+node {
+    checkout scm
+    sh './gradlew compileJava'
+    stash excludes: 'build/', includes: '**', name: 'source'
+}
+
+stage 'Run Unit Tests'
+
+node {
+    unstash 'source'
+    sh './gradlew :test'
+    step([$class: 'JUnitResultArchiver', testResults: '**/build/test-results/*.xml'])
+}
