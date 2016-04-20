@@ -8,7 +8,7 @@ node {
 
 stage 'Run Unit Tests'
 
-def splits = splitTests generateInclusions: true, parallelism: [$class: 'CountDrivenParallelism', size: 3]
+def splits = splitTests generateInclusions: true, parallelism: [$class: 'CountDrivenParallelism', size: 2]
 def branches = [:]
 for (int i = 0; i < splits.size(); i++) {
   def split = splits[i]
