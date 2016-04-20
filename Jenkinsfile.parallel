@@ -2,25 +2,23 @@ stage 'Compile'
 
 node {
     checkout scm
-    sh './gradlew compileJava'
+    sh './gradlew clean compileJava'
     stash excludes: 'build/', includes: '**', name: 'source'
 }
 
 stage 'Run Unit Tests'
 
-def splits = splitTests generateInclusions: true, parallelism: [$class: 'CountDrivenParallelism', size: 2]
+def splits = splitTests generateInclusions: true, parallelism: [$class: 'CountDrivenParallelism', size: 3]
 def branches = [:]
 for (int i = 0; i < splits.size(); i++) {
   def split = splits[i]
   branches["split${i}"] = {
     node('hi-speed') {
       unstash 'source'
-      sh 'mkdir -p build'
-      dir('build') {
-          writeFile file: (split.includes ? 'inclusions.txt' : 'exclusions.txt'), text: split.list.join("\n")
-          writeFile file: (split.includes ? 'exclusions.txt' : 'inclusions.txt'), text: ''
-      }
-      sh './gradlew :test'
+      writeFile file: (split.includes ? 'inclusions.txt' : 'exclusions.txt'), text: split.list.join("\n")
+      writeFile file: (split.includes ? 'exclusions.txt' : 'inclusions.txt'), text: ''
+
+      sh './gradlew clean :test'
 
       step([$class: 'JUnitResultArchiver', testResults: '**/build/test-results/*.xml'])
     }

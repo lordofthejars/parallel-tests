@@ -10,6 +10,6 @@ stage 'Run Unit Tests'
 
 node('hi-speed') {
     unstash 'source'
-    sh './gradlew :test'
+    sh './gradlew clean :test'
     step([$class: 'JUnitResultArchiver', testResults: '**/build/test-results/*.xml'])
 }

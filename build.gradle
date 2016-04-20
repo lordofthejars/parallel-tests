@@ -9,12 +9,12 @@ dependencies {
 }
 
 test {
-    File inclusions = new File("${buildDir}/inclusions.txt")
+    File inclusions = new File("${rootDir}/inclusions.txt")
     if (inclusions.exists()) {
         include inclusions.readLines()
     }
 
-    File exclusions = new File("${buildDir}/exclusions.txt")
+    File exclusions = new File("${rootDir}/exclusions.txt")
     if (exclusions.exists()) {
         exclude exclusions.readLines()
     }
