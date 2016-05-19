@@ -9,6 +9,9 @@ dependencies {
 }
 
 test {
+
+    maxParallelForks = 3
+
     File inclusions = new File("${rootDir}/inclusions.txt")
     if (inclusions.exists()) {
         include inclusions.readLines()
